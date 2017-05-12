@@ -10,19 +10,13 @@ app.get('/', function(req, res){
 });
 
 app.get('/vhr/:vin', function(req, res) {
-
-	console.log(req.params.vin);
-
 	var form = {
 		'SID': config.autocheckSid,
 		'PWD': config.autocheckPwd,
 		'CID': config.authocheckCid,
 		'VIN': req.params.vin
 	};
-
 	request.post({url: config.autocheckHostname + config.autocheckApiPath, form: form}, function(err, response, body){
-		console.log(response);
-
 		res.send(response);
 	});
 
