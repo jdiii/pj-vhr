@@ -8,12 +8,13 @@ app.use(bodyParser.json());
 var form = {
 	'SID': config.autocheckSid,
 	'PWD': config.autocheckPwd,
-	'CID': config.authocheckCid
+	'CID': config.autocheckCid
 };
 
 app.get('/', function(req, res){
 	res.send('There\'s nothing here!');
 });
+
 
 app.get('/vhr/:vin', function(req, res) {
 	var vhrForm = JSON.parse(JSON.stringify(form));
@@ -22,6 +23,7 @@ app.get('/vhr/:vin', function(req, res) {
 		res.send(response);
 	});
 });
+
 
 app.get('/badge/:vin', function(req, res) {
 
