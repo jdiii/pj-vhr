@@ -2,6 +2,7 @@ var express = require('express');
 var request = require('request');
 var config = require('./config');
 var bodyParser = require('body-parser');
+var FTP = require('ftp');
 var app = express();
 app.use(bodyParser.json());
 
@@ -22,6 +23,35 @@ app.get('/vhr/:vin', function(req, res) {
 	request.post({url: config.autocheckHostname + config.autocheckApiPath, form: vhrForm}, function(err, response, body){
 		res.send(response);
 	});
+});
+
+app.post('/cudl-upload' function(req, res){
+	let csv = req.body.inventory;
+	let dealer = req.body.filename;
+	let username = req.body.username;
+	let password = req.body.password;
+	let server = 'ftp.inventorycc.com';
+	let csvBuffer = Buffer.from(csv);
+
+ 	let ftp = new FTP();
+	ftp.on('ready', function(){
+		ftp.put(csvBuffer, `${dealer}.csv`, function(err){
+			console.log(err);
+			if(err){
+				res.status(500).send(err);
+			} else {
+				res.status(200).send('Uploaded \n' + csv);
+			}
+			ftp.end();
+		});
+	});
+
+	ftp.connect({
+		host: server,
+		user: username,
+		password: password,
+	});
+
 });
 
 
